@@ -46,8 +46,7 @@ abstract contract AccessControl is Context {
     modifier adminOrRole(uint256 role) {
         require(
             userToRole[_msgSender()] == role ||
-                userToRole[_msgSender()] == ADMIN_ROLE ||
-                _msgSender() == _owner,
+                userToRole[_msgSender()] == ADMIN_ROLE,
             // string(
                 // abi.encodePacked(
                     "AccessControl: Must be admin or of role"
