@@ -10,11 +10,16 @@ import "C:/Users/jorda/.brownie/packages/OpenZeppelin/openzeppelin-contracts@4.2
     @dev El accesso para MonterCock y sus contracts.
 
     Note insperacion viene por {KittyAccess} y el {AccessControl} de OpenZeppelin 
+    Note Some roles are preset:
+        - Admin: 1
+        - NoRole: 0
+    Note Owner is already defined as _owner. And is set when constructed based on the sender.
  */
 abstract contract AccessControl is Context {
     address private _owner;
 
     mapping(address => uint256) private userToRole;
+    // mapping(uint256 => string) roleName; ??? Possible
 
     // Empty constructor
     constructor() {
@@ -41,12 +46,11 @@ abstract contract AccessControl is Context {
             userToRole[_msgSender()] == role ||
                 userToRole[_msgSender()] == 1 ||
                 _msgSender() == _owner,
-            string(
-                abi.encodePacked(
-                    "AccessControl: Must be admin or of role ",
-                    role
-                )
-            )
+            // string(
+                // abi.encodePacked(
+                    "AccessControl: Must be admin or of role"
+                // )
+            // )
         );
         _;
     }
@@ -54,12 +58,12 @@ abstract contract AccessControl is Context {
     modifier roleOrOwner(uint256 role) {
         require(
             userToRole[_msgSender()] == role || _msgSender() == _owner,
-            string(
-                abi.encodePacked(
-                    "AccessControl: Must be owner or of role ",
-                    role
-                )
-            )
+            // string(
+                // abi.encodePacked(
+                    "AccessControl: Must be owner or of role"
+                    // role
+                // )
+            // )
         );
         _;
     }
@@ -67,12 +71,12 @@ abstract contract AccessControl is Context {
     modifier onlyRole(uint256 role) {
         require(
             userToRole[_msgSender()] == role,
-            string(
-                abi.encodePacked(
-                    "AccessControl: Must be owner or of role ",
-                    role
-                )
-            )
+            // string(
+                // abi.encodePacked(
+                    "AccessControl: Must be of role"
+                    // role
+                // )
+            // )
         );
         _;
     }
