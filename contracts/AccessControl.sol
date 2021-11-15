@@ -17,6 +17,8 @@ import "C:/Users/jorda/.brownie/packages/OpenZeppelin/openzeppelin-contracts@4.2
  */
 abstract contract AccessControl is Context {
     address private _owner;
+    uint8 private constant ADMIN_ROLE = 1;
+    uint8 private constant NO_ROLE = 0;
 
     mapping(address => uint256) private userToRole;
     // mapping(uint256 => string) roleName; ??? Possible
@@ -29,7 +31,7 @@ abstract contract AccessControl is Context {
     /* Modifiers */
     modifier adminOrOwner() {
         require(
-            _msgSender() == _owner || userToRole[_msgSender()] == 1,
+            _msgSender() == _owner || userToRole[_msgSender()] == ADMIN_ROLE,
             "AccessControl: Must be owner or admin to call."
         );
         _;
@@ -44,7 +46,7 @@ abstract contract AccessControl is Context {
     modifier adminOrRole(uint256 role) {
         require(
             userToRole[_msgSender()] == role ||
-                userToRole[_msgSender()] == 1 ||
+                userToRole[_msgSender()] == ADMIN_ROLE ||
                 _msgSender() == _owner,
             // string(
                 // abi.encodePacked(
@@ -94,15 +96,19 @@ abstract contract AccessControl is Context {
     }
 
     function addRole(address _newRoler, uint256 role) public adminOrOwner {
+        // Only owner can add admin
+        if (_msgSender() != _owner) {
+            require(role != ADMIN_ROLE, "AccessControl: Cannot add admin role.");
+        }
         _setRole(_newRoler, role);
     }
 
     function renounceRole() public {
         require(
-            userToRole[_msgSender()] != 0,
+            userToRole[_msgSender()] != NO_ROLE,
             "AccessControl: This account has no role to renounce."
         );
-        userToRole[_msgSender()] = 0;
+        userToRole[_msgSender()] = NO_ROLE;
     }
 
     function removeRole(address _toBeRemoved) public adminOrOwner {
@@ -110,6 +116,10 @@ abstract contract AccessControl is Context {
             _toBeRemoved != address(0),
             "AccessControl: You can not remove the 0 address."
         );
+        // Only the owner can remove admins
+        if (_msgSender() != _owner) {
+            require(userToRole[_toBeRemoved] != ADMIN_ROLE, "AccessControl: You can not remove an admin.");
+        }
         require(
             _toBeRemoved != _owner,
             "AccessControl: You can not remove the owner."
@@ -133,15 +143,15 @@ abstract contract AccessControl is Context {
             "AccessControl: Account can not be 0 address."
         );
         require(
-            userToRole[_admin] != 1,
+            userToRole[_admin] != ADMIN_ROLE,
             "AccessControl: Account is already admin."
         );
-        userToRole[_admin] = 1;
+        userToRole[_admin] = ADMIN_ROLE;
     }
 
     function _setRole(address account, uint256 role) private {
-        require(userToRole[account] == 0, "AccessControl: Account is already role.");
-        require(role != 0, "AccessControl: Can not set account to 0 role.");
+        require(userToRole[account] == NO_ROLE, "AccessControl: Account is already role.");
+        require(role != NO_ROLE, "AccessControl: Can not set account to 0 role.");
         require(
             account != address(0),
             "AccessControl: Account can not be the 0 address."
@@ -165,7 +175,7 @@ abstract contract AccessControl is Context {
     }
 
     function isAdmin(address _potentialAdmin) public view returns (bool) {
-        return userToRole[_potentialAdmin] == 1;
+        return userToRole[_potentialAdmin] == ADMIN_ROLE;
     }
 
     function isRole(address _potentialRoler, uint256 _roleToCheck)
