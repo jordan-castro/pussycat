@@ -140,6 +140,7 @@ abstract contract AccessControl is Context {
     }
 
     function _setRole(address account, uint256 role) private {
+        require(userToRole[account] == 0, "AccessControl: Account is already role.");
         require(role != 0, "AccessControl: Can not set account to 0 role.");
         require(
             account != address(0),
