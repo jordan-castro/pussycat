@@ -37,6 +37,7 @@ def main():
     burn_tests()
     pause_tests()
     role_tests()
+    owner_tests()
     print(" -- Main end -- ")
 
 
@@ -147,6 +148,7 @@ def role_tests():
     petite_cat.add_role(rudeus_greyart, 1) # Admin
     petite_cat.add_role(eris_whats_her_face, 2) # Pauser
     petite_cat.add_role(seol_jihu, 3) # Minter
+    petite_cat.add_role(jay, 3) # Minter
     
     # Add to a role as admin
     petite_cat.add_role(arthur_lewyin, 2, rudeus_greyart)
@@ -170,10 +172,37 @@ def role_tests():
     petite_cat.pause_contract(eris_whats_her_face)
     petite_cat.pause_contract(eris_whats_her_face)
 
+    # And renounce role
+    petite_cat.renounce_role(jay)
+    print(f"{address_to_name(jay)}'s role: {petite_cat.role_of(jay)}")
+
     print(" -- Role end -- \n")
 
 
-def pretty_print_balance(address):
+def owner_tests():
+    print(" -- Owner start -- ")
+
+    # Chequea quien es owner
+    print(address_to_name(petite_cat.owner()))
+    # Chequea is arthur already has a role
+    if petite_cat.role_of(arthur_lewyin) != 0:
+        print("Arthur has role")
+        petite_cat.remove_role(arthur_lewyin)
+    # Try as someone else to transfer to arthur
+    petite_cat.change_owner(arthur_lewyin, caera_whats_her_face)
+    print("Should fail ^^")
+    # Now actually transfer to arthur
+    petite_cat.change_owner(arthur_lewyin, me)
+    print(address_to_name(petite_cat.owner()))
+
+    # Now renouce ownership
+    petite_cat.stop_being_owner(arthur_lewyin)
+    print(petite_cat.owner())
+
+    print(" -- Owner end -- \n")
+
+
+def address_to_name(address):
     name = "Unknown"
     if address == me:
         name = "Me"
@@ -195,5 +224,10 @@ def pretty_print_balance(address):
         name = "Jay"
     elif address == shelly:
         name = "Shelly"
+
+    return name
+
+
+def pretty_print_balance(address):
     
-    print(f"{name}: {petite_cat.balance_of(address)}")
+    print(f"{address_to_name(address)}: {petite_cat.balance_of(address)}")
