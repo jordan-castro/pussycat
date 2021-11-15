@@ -3,7 +3,7 @@ from brownie import PetiteCat
 
 class PCat:
     def __init__(self, _from) -> None:
-        self.owner = _from
+        self.deployer = _from
         self.contract = PetiteCat.deploy({'from': _from})
 
     def __try_catch__(self, func, *args):
@@ -28,43 +28,43 @@ class PCat:
         return self.contract.balanceOf(_owner)
 
     def transfer(self, _to: str, _value: int, sender = None) -> bool:
-        return self.contract.transfer(_to, _value, {'from': sender or self.owner})
+        return self.contract.transfer(_to, _value, {'from': sender or self.deployer})
 
     def transfer_from(self, _from: str, _to: str, _value: int, sender = None) -> bool:
-        return self.contract.transferFrom(_from, _to, _value, {'from': sender or self.owner})
+        return self.contract.transferFrom(_from, _to, _value, {'from': sender or self.deployer})
 
     def approve(self, _spender: str, _value: int, sender=None) -> bool:
-        return self.contract.approve(_spender, _value, {'from': sender or self.owner})
+        return self.contract.approve(_spender, _value, {'from': sender or self.deployer})
 
     def allowance(self, _owner: str, _spender: str) -> int:
         return self.contract.allowance(_owner, _spender)
 
     def pause_contract(self, sender=None):
-        self.__try_catch__(self.contract.pauseContract, {'from': sender or self.owner})
+        self.__try_catch__(self.contract.pauseContract, {'from': sender or self.deployer})
 
     def burn(self, amount, sender=None):
-        self.__try_catch__(self.contract.burn, amount, {'from': sender or self.owner})
+        self.__try_catch__(self.contract.burn, amount, {'from': sender or self.deployer})
 
     def mint(self, to, amount, sender=None):
-        self.__try_catch__(self.contract.mint, to, amount, {'from': sender or self.owner})
+        self.__try_catch__(self.contract.mint, to, amount, {'from': sender or self.deployer})
 
     def change_owner(self, new_owner, sender=None):
-        self.__try_catch__(self.contract.changeOwner, new_owner, {'from': sender or self.owner})
+        self.__try_catch__(self.contract.changeOwner, new_owner, {'from': sender or self.deployer})
 
     def add_admin(self, admin, sender=None):
-        self.__try_catch__(self.contract.addAdmin, admin, {'from': sender or self.owner})
+        self.__try_catch__(self.contract.addAdmin, admin, {'from': sender or self.deployer})
 
     def add_role(self, address, role, sender=None):
-        self.__try_catch__(self.contract.addRole, address, role, {'from': sender or self.owner})
+        self.__try_catch__(self.contract.addRole, address, role, {'from': sender or self.deployer})
 
     def stop_being_owner(self, sender=None):
-        self.__try_catch__(self.contract.stopBeingOwner, {'from': sender or self.owner})
+        self.__try_catch__(self.contract.stopBeingOwner, {'from': sender or self.deployer})
 
     def renounce_role(self, sender=None):
-        self.__try_catch__(self.contract.renounceRole, {'from': sender or self.owner})
+        self.__try_catch__(self.contract.renounceRole, {'from': sender or self.deployer})
 
     def remove_role(self, address, sender=None):
-        self.__try_catch__(self.contract.removeRole, address, {'from': sender or self.owner})
+        self.__try_catch__(self.contract.removeRole, address, {'from': sender or self.deployer})
 
     def owner(self) -> str:
         return self.contract.owner()
