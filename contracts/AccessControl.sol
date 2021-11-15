@@ -185,5 +185,9 @@ abstract contract AccessControl is Context {
         return userToRole[_potentialRoler] == _roleToCheck;
     }
 
+    function roleOf(address _account) public view returns (uint256) {
+        return userToRole[_account];
+    }
+
     // function isRoleOrOwner()
 }
