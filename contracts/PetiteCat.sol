@@ -14,8 +14,8 @@ import "../contracts/AccessControl.sol";
 /// @notice A ERC20 token for the PetiteCat project.
 /// @dev Token is Pausable, Mintable, and Burnable.
 contract PetiteCat is AccessControl, ERC20Burnable, ERC20Pausable {
-    uint256 private constant PAUSE_ROLE = 1;
-    uint256 private constant MINT_ROLE = 1;
+    uint256 private constant PAUSE_ROLE = 2;
+    uint256 private constant MINT_ROLE = 3;
     
     // Contruct the ERC20 token
     constructor() ERC20("PetiteCat", "PTC") {
@@ -47,7 +47,20 @@ contract PetiteCat is AccessControl, ERC20Burnable, ERC20Pausable {
     /// @param _to The address to mint tokens to.
     /// @param _amount The amount of tokens to mint.
     /// @dev Must be called by owner or minter.
-    function mint(address _to, uint256 _amount) public roleOrOwner(MINT_ROLE) {
+    function mint(address _to, uint256 _amount) public roleOrOwner(MINT_ROLE) whenNotPaused {
         _mint(_to, _amount);
+    }
+
+    /* Override burn methods so that you can only burn when the contract is not paused. */    
+    
+    /// @dev Destroys `amount` tokens from the caller.
+    ///
+    /// See {ERC20Burnable}.
+    ///
+    function burn(uint256 amount) public override whenNotPaused {
+        super.burn(amount);
+    }
+    function burnFrom(address account, uint256 amount) public override whenNotPaused {
+        super.burnFrom(account, amount);
     }
 }
