@@ -80,3 +80,6 @@ class PCat:
 
     def paused(self) -> bool:
         return self.contract.paused()
+    
+    def role_of(self, account) -> int:
+        return self.contract.roleOf(account)
