@@ -46,7 +46,7 @@ contract PetiteCat is AccessControl, Pausable, ERC20Burnable {
     /// @dev pause the contract.
     /// @dev Must be called by pauser or owner.
     /// If the contract is paused, then it will unpause.  
-    function pauseContract() public roleOrOwner(PAUSE_ROLE) {
+    function pauseContract() public roleAndAbove(PAUSE_ROLE) {
         if (paused()) {
             _unpause();
         } else {
@@ -58,7 +58,7 @@ contract PetiteCat is AccessControl, Pausable, ERC20Burnable {
     /// @param _to The address to mint tokens to.
     /// @param _amount The amount of tokens to mint.
     /// @dev Must be called by owner or minter.
-    function mint(address _to, uint256 _amount) public roleOrOwner(MINT_ROLE) {
+    function mint(address _to, uint256 _amount) public roleAndAbove(MINT_ROLE) {
         _mint(_to, _amount);
     }
 
