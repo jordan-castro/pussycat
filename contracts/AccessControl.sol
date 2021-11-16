@@ -85,6 +85,7 @@ abstract contract AccessControl is Context {
         _;
     }
 
+    /// @dev To call functions using this modifier the caller needs to be the role or admin/owner.
     modifier roleAndAbove(uint256 role) {
         address sender = _msgSender();
         require(
