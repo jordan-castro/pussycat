@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.0;
 
-import "C:/Users/jorda/.brownie/packages/OpenZeppelin/openzeppelin-contracts@4.2.0/contracts/utils/Context.sol";
+import "../contracts/utils/Context.sol";
 
 /**
     @title AccessControl
