@@ -2,9 +2,9 @@
 
 pragma solidity ^0.8.0;
 
-import "C:/Users/jorda/.brownie/packages/OpenZeppelin/openzeppelin-contracts@4.2.0/contracts/token/ERC20/ERC20.sol";
-import "C:/Users/jorda/.brownie/packages/OpenZeppelin/openzeppelin-contracts@4.2.0/contracts/security/Pausable.sol";
-import "C:/Users/jorda/.brownie/packages/OpenZeppelin/openzeppelin-contracts@4.2.0/contracts/token/ERC20/extensions/ERC20Burnable.sol";
+import "../contracts/token/ERC20/ERC20.sol";
+import "../contracts/security/Pausable.sol";
+import "../contracts/token/ERC20/extensions/ERC20Burnable.sol";
 import "../contracts/AccessControl.sol";
 
 /// @title PetiteCat Token
