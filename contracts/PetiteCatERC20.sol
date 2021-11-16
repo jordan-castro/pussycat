@@ -2,7 +2,6 @@
 
 pragma solidity ^0.8.0;
 
-import "../contracts/token/ERC20/ERC20.sol";
 import "../contracts/security/Pausable.sol";
 import "../contracts/token/ERC20/extensions/ERC20Burnable.sol";
 import "../contracts/utils/AccessControl.sol";
