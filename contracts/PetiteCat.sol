@@ -13,7 +13,7 @@ import "../contracts/AccessControl.sol";
 /// @author James Garfield
 /// @notice A ERC20 token for the PetiteCat project.
 /// @dev Token is Pausable, Mintable, and Burnable.
-contract PetiteCat is AccessControl, ERC20Burnable, ERC20Pausable {
+contract PetiteCat is AccessControl, Pausable, ERC20Burnable {
     uint256 private constant PAUSE_ROLE = 2;
     uint256 private constant MINT_ROLE = 3;
     
@@ -23,12 +23,20 @@ contract PetiteCat is AccessControl, ERC20Burnable, ERC20Pausable {
         _mint(msg.sender, totalSupply);
     }
 
+    /// @dev Modifier to allow access while the contract is paused.
+    modifier runWhilePaused() {
+        if (paused()) {
+            require(isAdmin(_msgSender()) || isOwner(_msgSender()), "PetiteCat: paused");
+        }
+        _;
+    }
+
     /// @dev Because we are using the ERC20Pausable contract, and the ERC20Burnable contract.
     function _beforeTokenTransfer(
         address from,
         address to,
         uint256 amount
-    ) internal virtual override(ERC20, ERC20Pausable) {
+    ) internal virtual override runWhilePaused {
         super._beforeTokenTransfer(from, to, amount);
     }
 
@@ -47,20 +55,20 @@ contract PetiteCat is AccessControl, ERC20Burnable, ERC20Pausable {
     /// @param _to The address to mint tokens to.
     /// @param _amount The amount of tokens to mint.
     /// @dev Must be called by owner or minter.
-    function mint(address _to, uint256 _amount) public roleOrOwner(MINT_ROLE) whenNotPaused {
+    function mint(address _to, uint256 _amount) public roleOrOwner(MINT_ROLE) runWhilePaused {
         _mint(_to, _amount);
     }
 
     /* Override burn methods so that you can only burn when the contract is not paused. */    
-    
+
     /// @dev Destroys `amount` tokens from the caller.
     ///
     /// See {ERC20Burnable}.
     ///
-    function burn(uint256 amount) public override whenNotPaused {
+    function burn(uint256 amount) public override runWhilePaused {
         super.burn(amount);
     }
-    function burnFrom(address account, uint256 amount) public override whenNotPaused {
+    function burnFrom(address account, uint256 amount) public override runWhilePaused {
         super.burnFrom(account, amount);
     }
 }
