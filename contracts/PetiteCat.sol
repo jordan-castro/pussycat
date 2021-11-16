@@ -2,10 +2,8 @@
 
 pragma solidity ^0.8.0;
 
-// import "C:/Users/jorda/.brownie/packages/OpenZeppelin/openzeppelin-contracts@4.2.0/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "C:/Users/jorda/.brownie/packages/OpenZeppelin/openzeppelin-contracts@4.2.0/contracts/token/ERC20/ERC20.sol";
 import "C:/Users/jorda/.brownie/packages/OpenZeppelin/openzeppelin-contracts@4.2.0/contracts/security/Pausable.sol";
-import "C:/Users/jorda/.brownie/packages/OpenZeppelin/openzeppelin-contracts@4.2.0/contracts/token/ERC20/extensions/ERC20Pausable.sol";
 import "C:/Users/jorda/.brownie/packages/OpenZeppelin/openzeppelin-contracts@4.2.0/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 import "../contracts/AccessControl.sol";
 
@@ -23,10 +21,15 @@ contract PetiteCat is AccessControl, Pausable, ERC20Burnable {
         _mint(msg.sender, totalSupply);
     }
 
-    /// @dev Modifier to allow access while the contract is paused.
-    modifier runWhilePaused() {
+    /// @dev Admin || Owner || Pausers can run
+    modifier canRunWhilePaused() {
         if (paused()) {
-            require(isAdmin(_msgSender()) || isOwner(_msgSender()), "PetiteCat: paused");
+            require(
+                isAdmin(_msgSender()) || 
+                isOwner(_msgSender()) || 
+                isRole(_msgSender(), PAUSE_ROLE), 
+                "PetiteCat: paused"
+            );
         }
         _;
     }
@@ -36,7 +39,7 @@ contract PetiteCat is AccessControl, Pausable, ERC20Burnable {
         address from,
         address to,
         uint256 amount
-    ) internal virtual override runWhilePaused {
+    ) internal virtual override canRunWhilePaused {
         super._beforeTokenTransfer(from, to, amount);
     }
 
@@ -55,7 +58,7 @@ contract PetiteCat is AccessControl, Pausable, ERC20Burnable {
     /// @param _to The address to mint tokens to.
     /// @param _amount The amount of tokens to mint.
     /// @dev Must be called by owner or minter.
-    function mint(address _to, uint256 _amount) public roleOrOwner(MINT_ROLE) runWhilePaused {
+    function mint(address _to, uint256 _amount) public roleOrOwner(MINT_ROLE) {
         _mint(_to, _amount);
     }
 
@@ -65,10 +68,10 @@ contract PetiteCat is AccessControl, Pausable, ERC20Burnable {
     ///
     /// See {ERC20Burnable}.
     ///
-    function burn(uint256 amount) public override runWhilePaused {
+    function burn(uint256 amount) public override canRunWhilePaused {
         super.burn(amount);
     }
-    function burnFrom(address account, uint256 amount) public override runWhilePaused {
+    function burnFrom(address account, uint256 amount) public override canRunWhilePaused {
         super.burnFrom(account, amount);
     }
 }
