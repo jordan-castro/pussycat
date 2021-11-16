@@ -1,3 +1,7 @@
+"""
+Deploys the contract and tests the functionality.
+"""
+
 print(" -- Script start -- ")
 
 
