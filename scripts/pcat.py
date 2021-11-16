@@ -2,6 +2,9 @@ from brownie import PetiteCat
 
 
 class PCat:
+    """
+    Wrapper for brownie.PetiteCat solidity code.
+    """
     def __init__(self, _from) -> None:
         self.deployer = _from
         self.contract = PetiteCat.deploy({'from': _from})
