@@ -229,5 +229,4 @@ def address_to_name(address):
 
 
 def pretty_print_balance(address):
-    
     print(f"{address_to_name(address)}: {petite_cat.balance_of(address)}")
