@@ -5,13 +5,13 @@ pragma solidity ^0.8.0;
 import "../contracts/token/ERC20/ERC20.sol";
 import "../contracts/security/Pausable.sol";
 import "../contracts/token/ERC20/extensions/ERC20Burnable.sol";
-import "../contracts/AccessControl.sol";
+import "../contracts/utils/AccessControl.sol";
 
-/// @title PetiteCat Token
+/// @title PetiteCat ERC20 Token
 /// @author James Garfield
 /// @notice A ERC20 token for the PetiteCat project.
 /// @dev Token is Pausable, Mintable, and Burnable.
-contract PetiteCat is AccessControl, Pausable, ERC20Burnable {
+contract PetiteCatERC20 is AccessControl, Pausable, ERC20Burnable {
     uint256 private constant PAUSE_ROLE = 2;
     uint256 private constant MINT_ROLE = 3;
     

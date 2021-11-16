@@ -1,4 +1,4 @@
-from brownie import PetiteCat
+from brownie import PetiteCatERC20
 
 
 class PCat:
@@ -7,7 +7,7 @@ class PCat:
     """
     def __init__(self, _from) -> None:
         self.deployer = _from
-        self.contract = PetiteCat.deploy({'from': _from})
+        self.contract = PetiteCatERC20.deploy({'from': _from})
 
     def __try_catch__(self, func, *args):
         try:
