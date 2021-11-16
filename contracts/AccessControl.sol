@@ -17,8 +17,8 @@ import "C:/Users/jorda/.brownie/packages/OpenZeppelin/openzeppelin-contracts@4.2
  */
 abstract contract AccessControl is Context {
     address private _owner;
-    uint8 private constant ADMIN_ROLE = 1;
-    uint8 private constant NO_ROLE = 0;
+    uint256 private constant ADMIN_ROLE = 1;
+    uint256 private constant NO_ROLE = 0;
 
     mapping(address => uint256) private userToRole;
     // mapping(uint256 => string) roleName; ??? Possible
