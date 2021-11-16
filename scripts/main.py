@@ -32,12 +32,12 @@ def main():
     print(petite_cat.decimals())
     print(petite_cat.total_supply())
 
-    transfer_tests()
-    mint_tests()
-    burn_tests()
+    # transfer_tests()
+    # mint_tests()
+    # burn_tests()
     pause_tests()
-    role_tests()
-    owner_tests()
+    # role_tests()
+    # owner_tests()
     print(" -- Main end -- ")
 
 
@@ -124,10 +124,14 @@ def pause_tests():
         petite_cat.transfer(shelly, 100, jay)
     except:
         pass
-    # Intenta mint
+    # Mint as owner
     petite_cat.mint(me, 400)
+    # Mint as non owner
+    petite_cat.mint(shelly, 400, jay)
     # Intenta burn
     petite_cat.burn(200, jay)
+    # Now burn as owner
+    petite_cat.burn(200, me)
 
     # Unpause
     petite_cat.pause_contract(shelly)
@@ -170,7 +174,8 @@ def role_tests():
     # Now mint as a minter and puase as a pauser
     petite_cat.mint(seol_jihu, 400)
     petite_cat.pause_contract(eris_whats_her_face)
-    petite_cat.pause_contract(eris_whats_her_face)
+    # Unpause as admin
+    petite_cat.pause_contract(rudeus_greyart)
 
     # And renounce role
     petite_cat.renounce_role(jay)
@@ -182,6 +187,8 @@ def role_tests():
 def owner_tests():
     print(" -- Owner start -- ")
 
+    # Send some tokens to Artur (Future owner)
+    petite_cat.transfer(arthur_lewyin, 10000)
     # Chequea quien es owner
     print(address_to_name(petite_cat.owner()))
     # Chequea is arthur already has a role
@@ -194,6 +201,11 @@ def owner_tests():
     # Now actually transfer to arthur
     petite_cat.change_owner(arthur_lewyin, me)
     print(address_to_name(petite_cat.owner()))
+
+    # Pause el contract y hacemos la vaina como author
+    petite_cat.pause_contract(arthur_lewyin)
+    petite_cat.transfer(caera_whats_her_face, 500, arthur_lewyin)
+    petite_cat.transfer(tessia_earlith, 1000, arthur_lewyin) # Because Tess is better
 
     # Now renouce ownership
     petite_cat.stop_being_owner(arthur_lewyin)
