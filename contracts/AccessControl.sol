@@ -30,8 +30,9 @@ abstract contract AccessControl is Context {
 
     /* Modifiers */
     modifier adminOrOwner() {
+        address sender = _msgSender();
         require(
-            _msgSender() == _owner || userToRole[_msgSender()] == ADMIN_ROLE,
+            sender == _owner || userToRole[sender] == ADMIN_ROLE,
             "AccessControl: Must be owner or admin to call."
         );
         _;
@@ -44,9 +45,10 @@ abstract contract AccessControl is Context {
 
     /// @dev Tambien puede ser owner.
     modifier adminOrRole(uint256 role) {
+        address sender = _msgSender();
         require(
-            userToRole[_msgSender()] == role ||
-                userToRole[_msgSender()] == ADMIN_ROLE,
+            userToRole[sender] == role ||
+                userToRole[sender] == ADMIN_ROLE,
             // string(
                 // abi.encodePacked(
                     "AccessControl: Must be admin or of role"
@@ -57,8 +59,9 @@ abstract contract AccessControl is Context {
     }
 
     modifier roleOrOwner(uint256 role) {
+        address sender = _msgSender();
         require(
-            userToRole[_msgSender()] == role || _msgSender() == _owner,
+            userToRole[sender] == role || sender == _owner,
             // string(
                 // abi.encodePacked(
                     "AccessControl: Must be owner or of role"
@@ -78,6 +81,17 @@ abstract contract AccessControl is Context {
                     // role
                 // )
             // )
+        );
+        _;
+    }
+
+    modifier roleAndAbove(uint256 role) {
+        address sender = _msgSender();
+        require(
+            userToRole[sender] == role ||
+            isAdmin(sender) || 
+            isOwner(sender),
+            "AccessControl: Must be of role or higher." 
         );
         _;
     }
@@ -103,11 +117,12 @@ abstract contract AccessControl is Context {
     }
 
     function renounceRole() public {
+        address sender = _msgSender();
         require(
-            userToRole[_msgSender()] != NO_ROLE,
+            userToRole[sender] != NO_ROLE,
             "AccessControl: This account has no role to renounce."
         );
-        userToRole[_msgSender()] = NO_ROLE;
+        userToRole[sender] = NO_ROLE;
     }
 
     function removeRole(address _toBeRemoved) public adminOrOwner {
