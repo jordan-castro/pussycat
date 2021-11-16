@@ -5,8 +5,8 @@ The PetiteCat smart contract is a smart contract that allows users to create and
 
 PetiteCatERC20 is a Burnable, Mintable, and Pausable ERC20 token.
 
-Burnable: Allows users to burn their tokens.
-Mintable: Allows address with the MinterRole to mint new tokens.
-Pausable: Allows address with the PauserRole to pause the token.
-    Pausing is useful for deploying new features or fixing bugs.
-    - Pausing emits a Pause event because transpacency is important.
+    - Burnable: Allows users to burn their tokens.
+    - Mintable: Allows address with the MinterRole to mint new tokens.
+    - Pausable: Allows address with the PauserRole to pause the token.
+        - Pausing is useful for deploying new features or fixing bugs.
+        - Pausing emits a Pause event because transpacency is important.
