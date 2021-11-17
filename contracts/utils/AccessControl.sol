@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.0;
 
-import "../contracts/utils/Context.sol";
+import "../utils/Context.sol";
 
 /**
     @title AccessControl
@@ -19,6 +19,22 @@ abstract contract AccessControl is Context {
     address private _owner;
     uint256 private constant ADMIN_ROLE = 1;
     uint256 private constant NO_ROLE = 0;
+
+    /* Events */
+    event RoleAdded(
+        address indexed adder, 
+        address indexed added, 
+        uint256 indexed role
+    );
+    event RoleRemoved(
+        address indexed remover, 
+        address indexed removed, 
+        uint256 indexed role
+    );
+    event OwnerChanged(
+        address indexed oldOwner, 
+        address indexed newOwner
+    );
 
     mapping(address => uint256) private userToRole;
     // mapping(uint256 => string) roleName; ??? Possible
@@ -123,6 +139,9 @@ abstract contract AccessControl is Context {
             userToRole[sender] != NO_ROLE,
             "AccessControl: This account has no role to renounce."
         );
+
+        // Log the event
+        emit RoleRemoved(sender, sender, userToRole[sender]);
         userToRole[sender] = NO_ROLE;
     }
 
@@ -139,6 +158,9 @@ abstract contract AccessControl is Context {
             _toBeRemoved != _owner,
             "AccessControl: You can not remove the owner."
         );
+
+        // Log the event
+        emit RoleRemoved(_msgSender(), _toBeRemoved, userToRole[_toBeRemoved]);
         userToRole[_toBeRemoved] = 0;
     }
 
@@ -149,6 +171,9 @@ abstract contract AccessControl is Context {
             _owner != owner_,
             "AccessControl: Owner can not be set to themselves."
         );
+
+        // Log the new owner
+        emit OwnerChanged(_owner, owner_);
         _owner = owner_;
     }
 
@@ -161,21 +186,26 @@ abstract contract AccessControl is Context {
             userToRole[_admin] != ADMIN_ROLE,
             "AccessControl: Account is already admin."
         );
+
+        // Log the new admin
+        emit RoleAdded(_msgSender(), _admin, ADMIN_ROLE);
         userToRole[_admin] = ADMIN_ROLE;
     }
 
     function _setRole(address account, uint256 role) private {
-        require(userToRole[account] == NO_ROLE, "AccessControl: Account is already role.");
-        require(role != NO_ROLE, "AccessControl: Can not set account to 0 role.");
+        require(userToRole[account] == NO_ROLE, "AccessControl: Account already has a role.");
+        require(role != NO_ROLE, "AccessControl: Can not set account to NO_ROLE.");
         require(
             account != address(0),
             "AccessControl: Account can not be the 0 address."
         );
         require(
             userToRole[account] != role,
-            "AccessControl: Account is already role."
+            "AccessControl: Account already has this role."
         );
 
+        // Log the new role
+        emit RoleAdded(_msgSender(), account, role);
         userToRole[account] = role;
     }
 
