@@ -6,16 +6,16 @@ import "../contracts/security/Pausable.sol";
 import "../contracts/token/ERC20/extensions/ERC20Burnable.sol";
 import "../contracts/utils/AccessControl.sol";
 
-/// @title PetiteCat ERC20 Token
+/// @title PussyCat ERC20 Token
 /// @author James Garfield
-/// @notice A ERC20 token for the PetiteCat project.
+/// @notice A ERC20 token for the PussyCat project.
 /// @dev Token is Pausable, Mintable, and Burnable.
-contract PetiteCatERC20 is AccessControl, Pausable, ERC20Burnable {
+contract PussyCatERC20 is AccessControl, Pausable, ERC20Burnable {
     uint256 private constant PAUSE_ROLE = 2;
     uint256 private constant MINT_ROLE = 3;
     
     // Contruct the ERC20 token
-    constructor() ERC20("PetiteCat", "PTC") {
+    constructor() ERC20("PussyCat", "PCAT") {
         uint totalSupply = 1000000;
         _mint(msg.sender, totalSupply);
     }
@@ -27,7 +27,7 @@ contract PetiteCatERC20 is AccessControl, Pausable, ERC20Burnable {
                 isAdmin(_msgSender()) || 
                 isOwner(_msgSender()) || 
                 isRole(_msgSender(), PAUSE_ROLE), 
-                "PetiteCat: paused"
+                "PussyCat: paused"
             );
         }
         _;
